@@ -4,10 +4,11 @@
             <div class="flex h-6 items-center">
                 <input
                     :id="index"
+                    :value="standard['selected']"
                     name="comments"
                     type="checkbox"
                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                    @change="addStandard(standard)"
+                    @change="setStandard(standard, index)"
                 />
             </div>
             <div class="ml-3 text-sm leading-6">
@@ -19,11 +20,27 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
     export default {
         props: ['standards'],
+        computed: {
+            ...mapState({
+                selectedStandards: state => state.standards.items
+            }),
+        },
         methods: {
-            addStandard (standard) {
-                this.$store.dispatch('standards/addItemToStandards', standard)
+            setStandard(standard, index) {
+                let items = this.selectedStandards.map(s => s.code)
+                if(items.includes(standard.code)) {
+                    this.$store.dispatch('standards/removeItemFromStandards', index)
+                } else {
+                    this.$store.dispatch('standards/addItemToStandards', standard)
+                }
+            }
+        },
+        watch: {
+            standard(value) {
+                console.log(value)
             }
         }
     }
