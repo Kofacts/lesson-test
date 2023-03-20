@@ -4,7 +4,7 @@
             <div class="flex h-6 items-center">
                 <input
                     :id="index"
-                    :value="standard['selected']"
+                    :checked="isSelected(standard)"
                     name="comments"
                     type="checkbox"
                     class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
@@ -29,6 +29,10 @@ import { mapState } from 'vuex'
             }),
         },
         methods: {
+            isSelected(standard) {
+                let items = this.selectedStandards?.map(s => s.code)
+                return items.includes(standard.code)
+            },
             setStandard(standard, index) {
                 let items = this.selectedStandards.map(s => s.code)
                 if(items.includes(standard.code)) {
@@ -36,11 +40,6 @@ import { mapState } from 'vuex'
                 } else {
                     this.$store.dispatch('standards/addItemToStandards', standard)
                 }
-            }
-        },
-        watch: {
-            standard(value) {
-                console.log(value)
             }
         }
     }
